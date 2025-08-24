@@ -1,4 +1,4 @@
-﻿# Zentra API Tester
+# Zentra API Tester
 
 A modern, feature-rich web application for testing REST APIs with comprehensive logging and session management.
 
@@ -34,7 +34,7 @@ A modern, feature-rich web application for testing REST APIs with comprehensive 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/zentra-api-tester.git
+   git clone https://github.com/Mridul232/zentra-api-tester.git
    cd zentra-api-tester
    ```
 
