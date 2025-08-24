@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ZentraAPI logo">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7A3FE3"/>
+      <stop offset="100%" stop-color="#45A3FF"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#000000" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <!-- Rounded square background -->
+  <rect x="16" y="16" width="224" height="224" rx="44" fill="url(#g)" filter="url(#shadow)"/>
+  <!-- Minimalist Z mark -->
+  <path d="M72 92 H184 L72 164 H184"
+        fill="none"
+        stroke="#FFFFFF"
+        stroke-width="18"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+</svg>

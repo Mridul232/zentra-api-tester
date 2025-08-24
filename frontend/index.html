@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Tester</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="zentraapi-logo.svg" alt="Organization Logo" class="organization-logo" id="org-logo">
+                    <span class="logo-text">Zentra API</span>
+                </div>
+                <div class="title-section">
+                    <h1>API Tester</h1>
+                    <p>Test your APIs with ease</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main API Tester -->
+        <div class="api-tester">
+            <!-- Request Section -->
+            <div class="request-section">
+                <!-- URL Section -->
+                <div class="url-section">
+                    <select id="method" class="method-select">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                        <option value="PATCH">PATCH</option>
+                        <option value="HEAD">HEAD</option>
+                        <option value="OPTIONS">OPTIONS</option>
+                    </select>
+                    <input id="url" type="text" placeholder="Enter request URL or select predefined API" class="url-input">
+                    <button id="send-btn" class="send-btn">Send</button>
+                </div>
+
+                <!-- Response Format Toggle -->
+                <div class="response-format-toggle">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="raw-response-toggle" class="toggle-checkbox" checked>
+                        <span class="toggle-text">Raw Response</span>
+                    </label>
+                </div>
+
+                <!-- Headers and Body Side by Side -->
+                <div class="request-content">
+                    <!-- Headers Section -->
+                    <div class="headers-section">
+                        <h4>Headers</h4>
+                        <div id="headers-container">
+                            <div class="header-row">
+                                <input type="text" placeholder="Header Key" class="header-input header-key">
+                                <input type="text" placeholder="Header Value" class="header-input header-value">
+                                <button class="remove-btn" onclick="removeHeader(this)">Remove</button>
+                            </div>
+                        </div>
+                        <button id="add-header-btn" class="add-header-btn">+ Add Header</button>
+                    </div>
+
+                    <!-- Body Section -->
+                    <div class="body-section">
+                        <h4>Request Body</h4>
+                        <textarea id="request-body" placeholder="Enter request body (JSON, XML, etc.)" class="body-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Response Section -->
+            <div class="response-section">
+                <h3>Response</h3>
+                
+                <!-- Response Stats -->
+                <div id="response-stats" class="response-stats" style="display: none;">
+                    <div class="stat">
+                        <div class="stat-label">Status</div>
+                        <div id="status-value" class="stat-value"></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Time</div>
+                        <div id="time-value" class="stat-value"></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Size</div>
+                        <div id="size-value" class="stat-value"></div>
+                    </div>
+                </div>
+
+                <!-- Response Tabs -->
+                <div class="response-tabs">
+                    <div class="tab active" data-response-tab="body">Response Body</div>
+                    <div class="tab" data-response-tab="headers">Response Headers</div>
+                    <div class="tab" data-response-tab="logs">Request Logs</div>
+                </div>
+
+                <!-- Response Content -->
+                <div class="response-content">
+                    <div id="loading" class="loading" style="display: none;">
+                        <div class="spinner"></div>
+                    </div>
+                    <div id="response-body-tab" class="response-panel active">
+                        <pre id="response-body" class="response-body">No response yet. Send a request to see the response.</pre>
+                    </div>
+                    <div id="response-headers-tab" class="response-panel">
+                        <pre id="response-headers" class="response-body">No response headers yet.</pre>
+                    </div>
+                    <div id="response-logs-tab" class="response-panel">
+                        <div class="logs-section">
+                            <div class="logs-header">
+                                <h4>Session Logs</h4>
+                                <div class="logs-controls">
+                                    <button id="refresh-logs-btn" class="btn-small">Refresh</button>
+                                    <button id="clear-logs-btn" class="btn-small">Clear Session</button>
+                                    <button id="export-logs-btn" class="btn-small">Export</button>
+                                </div>
+                            </div>
+                            <div class="logs-stats" id="logs-stats">
+                                <div class="stat-small">
+                                    <span class="stat-label">Total Requests:</span>
+                                    <span id="total-requests">0</span>
+                                </div>
+                                <div class="stat-small">
+                                    <span class="stat-label">Success Rate:</span>
+                                    <span id="success-rate">0%</span>
+                                </div>
+                                <div class="stat-small">
+                                    <span class="stat-label">Avg Response Time:</span>
+                                    <span id="avg-response-time">0ms</span>
+                                </div>
+                            </div>
+                            <div id="logs-content" class="logs-content">
+                                <div class="logs-placeholder">No logs available. Send a request to see logs.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=3"></script>
+</body>
+</html>
