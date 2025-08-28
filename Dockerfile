@@ -15,13 +15,16 @@ RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.87/bin/apache-tomc
     && rm apache-tomcat-8.5.87.tar.gz
 
 # Copy backend WAR file to Tomcat webapps
-COPY backend/target/api-tester.war $CATALINA_HOME/webapps/
+COPY backend/target/api-tester.war $CATALINA_HOME/webapps/api-tester.war
 
-# Copy frontend files to Tomcat webapps (optional: for static hosting)
+# Copy frontend files to Tomcat webapps ROOT (optional)
 COPY frontend/ $CATALINA_HOME/webapps/ROOT/
 
 # Expose Tomcat port
 EXPOSE 8080
+
+# Health check (optional, for Render)
+HEALTHCHECK CMD wget --spider -q http://localhost:8080/api-tester/ || exit 1
 
 # Start Tomcat
 CMD ["catalina.sh", "run"]
