@@ -122,6 +122,35 @@ mvn javadoc:javadoc
 3. Deploy and run locally
 4. Access at `http://localhost:8080/api-tester/`
 
+## Docker Deployment
+
+You can run the entire project using Docker and Apache Tomcat 8.5.87.
+
+### Build and Run with Docker
+
+1. Build the Maven project first (to generate the WAR file):
+   ```bash
+   cd backend
+   mvn clean package
+   ```
+
+2. Build the Docker image:
+   ```bash
+   docker build -t zentra-api-tester .
+   ```
+
+3. Run the Docker container:
+   ```bash
+   docker run -p 8080:8080 zentra-api-tester
+   ```
+
+4. Access the application at:
+   ```
+   http://localhost:8080/api-tester/
+   ```
+
+The Dockerfile installs OpenJDK 8, downloads Tomcat 8.5.87, deploys your backend WAR, and serves the frontend from the ROOT directory.
+
 ## Contributing
 
 1. Fork the repository
