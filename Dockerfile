@@ -1,36 +1,25 @@
 # ---------- Build Stage ----------
-FROM maven:3.8.5-openjdk-17 AS build
-
-# Set working directory to backend (where pom.xml exists)
+FROM maven:3.8.7-openjdk-8 AS build
+WORKDIR /app
+COPY backend /app/backend
+COPY frontend /app/frontend
 WORKDIR /app/backend
-
-# Copy only backend first (to cache dependencies)
-COPY backend/pom.xml .
-RUN mvn dependency:go-offline -B
-
-# Copy full backend source
-COPY backend/ .
-
-# Run Maven build (skip tests for speed)
-RUN mvn clean package -DskipTests
+RUN mvn clean package
 
 # ---------- Runtime Stage ----------
-FROM tomcat:9.0-jdk17
+FROM openjdk:8-jdk-alpine
+ENV CATALINA_HOME /usr/local/tomcat
+ENV PATH $CATALINA_HOME/bin:$PATH
+RUN apk add --no-cache wget unzip
+RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.87/bin/apache-tomcat-8.5.87.tar.gz \
+    && tar xzf apache-tomcat-8.5.87.tar.gz -C /usr/local/ \
+    && mv /usr/local/apache-tomcat-8.5.87 $CATALINA_HOME \
+    && rm apache-tomcat-8.5.87.tar.gz
 
-# Remove default ROOT app
-RUN rm -rf /usr/local/tomcat/webapps/ROOT
-
-# Copy backend WAR into Tomcat
-COPY --from=build /app/backend/target/*.war /usr/local/tomcat/webapps/ROOT.war
-
-# Copy frontend files (optional)
-COPY frontend/ /usr/local/tomcat/webapps/ROOT/
-
-# Expose Tomcat port
+# Copy built WAR from Maven image
+COPY --from=build /app/backend/target/api-tester.war $CATALINA_HOME/webapps/api-tester.war
+# Copy frontend files to Tomcat webapps ROOT (optional)
+COPY frontend/ $CATALINA_HOME/webapps/ROOT/
 EXPOSE 8080
-
-# Health check (Render)
-HEALTHCHECK CMD curl -f http://localhost:8080/ || exit 1
-
-# Start Tomcat
+HEALTHCHECK CMD wget --spider -q http://localhost:8080/api-tester/ || exit 1
 CMD ["catalina.sh", "run"]
