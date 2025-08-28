@@ -1,37 +1,36 @@
-# ---------- Stage 1: Build WAR with Maven ----------
+# ---------- Build Stage ----------
 FROM maven:3.8.5-openjdk-17 AS build
 
-# Set working directory inside the container
-WORKDIR /app
+# Set working directory to backend (where pom.xml exists)
+WORKDIR /app/backend
 
-# Copy all project files into container
-COPY . .
+# Copy only backend first (to cache dependencies)
+COPY backend/pom.xml .
+RUN mvn dependency:go-offline -B
 
-# Run Maven build (skip tests to speed up)
+# Copy full backend source
+COPY backend/ .
+
+# Run Maven build (skip tests for speed)
 RUN mvn clean package -DskipTests
 
-
-# ---------- Stage 2: Run on Tomcat ----------
+# ---------- Runtime Stage ----------
 FROM tomcat:9.0-jdk17
 
-# Set environment variables
-ENV CATALINA_HOME /usr/local/tomcat
-ENV PATH $CATALINA_HOME/bin:$PATH
-
 # Remove default ROOT app
-RUN rm -rf $CATALINA_HOME/webapps/ROOT
+RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
-# Copy the WAR built in Stage 1 into Tomcat as ROOT.war
-COPY --from=build /app/backend/target/*.war $CATALINA_HOME/webapps/ROOT.war
+# Copy backend WAR into Tomcat
+COPY --from=build /app/backend/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
-# Copy frontend files into ROOT folder (optional: static hosting)
-COPY frontend/ $CATALINA_HOME/webapps/ROOT/
+# Copy frontend files (optional)
+COPY frontend/ /usr/local/tomcat/webapps/ROOT/
 
 # Expose Tomcat port
 EXPOSE 8080
 
-# Health check (optional, for Render)
-HEALTHCHECK CMD curl --fail http://localhost:8080/ || exit 1
+# Health check (Render)
+HEALTHCHECK CMD curl -f http://localhost:8080/ || exit 1
 
 # Start Tomcat
 CMD ["catalina.sh", "run"]
