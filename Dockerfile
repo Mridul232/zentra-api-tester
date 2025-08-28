@@ -1,5 +1,5 @@
 # ---------- Build Stage ----------
-FROM maven:3.8.7-openjdk-8 AS build
+FROM maven:3.8.8-eclipse-temurin AS build
 WORKDIR /app
 COPY backend /app/backend
 COPY frontend /app/frontend
